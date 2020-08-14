@@ -1,0 +1,25 @@
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@1.1.1
+
+jobs:
+  hatchet:
+    docker:
+      - image: circleci/ruby:2.7
+    steps:
+      - checkout
+      - heroku/install
+      - run:
+          name: Install Ruby dependencies
+          command: |
+            gem install bundler
+            bundle install
+      - run: bundle exec hatchet ci:setup
+      - run: bundle exec rspec spec/
+
+workflows:
+  version: 2.1
+  default-ci-workflow:
+    jobs:
+      - hatchet
